@@ -1,0 +1,2 @@
+1.handling the "i dont know "  situation.
+2.displaying the source of context(information from KB) with every response of llm which makes the llm reliable
