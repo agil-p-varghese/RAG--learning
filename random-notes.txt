@@ -1,2 +1,20 @@
 1.handling the "i dont know "  situation.
 2.displaying the source of context(information from KB) with every response of llm which makes the llm reliable
+3. have atleast 2 inference provider api keys-gpt,gemini
+4.install uv package,init,venv
+5.install packages langchain,langchain core...,py.
+6.env file-secrets
+7.raw files -> doc loader->langchain friendly datat form
+8.core loader-pdf,web,folder,unstructured ,txt
+9.PyMuPdF loader,unstructured pdf loader(tables...)
+9.web loading-->
+10.chunking makes or break the RAG-->chunking is imp.
+11.spilt with meaning boundary-->
+12.CHUNKING IS THE ARCHIETECUTURE-chunking is the main thing which controlls rag quality
+CHUUNKING STATERGIES
+/////////////////
+-fixed chunking--not for production
+-recursive chunking
+try to split at natural boundaries(eg split at para(\n\n) ,or new line split(\n),sentences(.),clauses(,)------decision tree for chumking
+-semantic chunking:
+embed each sentense ,compare adja sentences for similarty  used for quality text splitiing eg-legal documents,technical manuals...here accurancy means lot
