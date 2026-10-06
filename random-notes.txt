@@ -18,3 +18,41 @@ CHUUNKING STATERGIES
 try to split at natural boundaries(eg split at para(\n\n) ,or new line split(\n),sentences(.),clauses(,)------decision tree for chumking
 -semantic chunking:
 embed each sentense ,compare adja sentences for similarty  used for quality text splitiing eg-legal documents,technical manuals...here accurancy means lot
+////////////////
+traditional vs late chunking
+-traditional chunking lost context at boundaries
+-late chunking==full doc->embeded first ->embedding chunking
+-taditional chunking chunk 5 has no idea what chunk 1--4 contain
+-Late:chunk 5 embedding includes full doc context(accurancy incr by~10%) 
+//////////////
+EMBEDDING
+//////////////
+chat model=>text in->text out(eg::gpt)
+embedding model==>text in ,embedding/vector out
+//////////////
+chroma db---
+metadata- filtering
+///////////
+RAG pipeline---1::30 min
+QQ}
+///////why RAG FAILS???
+1-Bad chunking
+causes loss of context betw the chunks 
+resolveing by recursive text splitter
+having overlap helps to maintain the context --cheap method
+2-embedding mismatch
+3-Retreival noise
+retreiver may return relevant and irrelevant doc
+//vector search fails in::
+-in cases of product codes eg::SKU456JI(no meaning for codes)
+-Actonyms -FSSAI guidelines
+-ERR codes--its a literal string that require semantic matching
+-exactr names like john s address
+///solution BM25 search
+-good at keyword match
+/////conclution
+we do a hybrid matching
+we do a RRF--reciprocal rank fusion(ranks the chunks from both semantic and keyword chunks
+!!!!!!!!!!in PRODUCTION add HYBRID SEARCH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+4.contexrt overflow
+5.hallucination
