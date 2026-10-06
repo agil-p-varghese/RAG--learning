@@ -105,3 +105,41 @@ TRACES
 Langsmith
 /////////////////
 langsmith_setup.py
+advanvanced_rag.py(133 line)=>demo_contextual compression=>advaced rag line1
+////////////
+index tunning==scaling factor
+HNSW parameters
+1.M(max connections)
+the maximum connection between nodes in graph
+low M==small index ,faster build
+high M ==larger index,higher accurancy
+
+2.ef(Search Efforts)
+low ef---fast search ,low accurancy
+high ef---vice versa
+The Production Trade Off
+is between
+1)Accurancy
+2)speed
+3)Memory
+//////////////
+for prototype====m=16,ef=40
+for prodcution---m=16,ef =100
+for high accurancy cases-----m=32,ef=200
+scaling situation
+/////////////////
+if query taking too long ==>vertical scale(add ram,hww stack
+if getting out of memoy error or accurancy lost===>spilit instance(horizontal scaling)
+///////////////////////////////////////
+A SINGLE WELL TUNNED INSTANCE HANDLES MILLIONS OF VECTORS!!!!!!!!!!!========DONT OVER ENGINEER#####################
+AT LARGE SCALE PGVECTOR SELF HOSTED WILL SAVE US THOUSANDS OF DOLLARS
+////////////////////////////////
+COST OPTIMIZATION TECHNIQUES
+////////////////////////
+Reduce the dimension of the vectors
+use quantization  
+batch queries(
+caching
+right size----initially start with small instanes
+///////////////////////////////
+supabase-connection.py
