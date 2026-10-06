@@ -54,5 +54,54 @@ retreiver may return relevant and irrelevant doc
 we do a hybrid matching
 we do a RRF--reciprocal rank fusion(ranks the chunks from both semantic and keyword chunks
 !!!!!!!!!!in PRODUCTION add HYBRID SEARCH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+implementation in prod_hybrid_search.py
 4.contexrt overflow
+token budgeting(imp for inferencing)
+one bad request could blow our tokens
+we track 3 things 
+-input token
+-output token
+-requests
+implementation n cost_optimisation.py
+we can check in the langsmith of our token flow
+if a user is blowing the token,talk with him and charge him more
+model routing,token budgeting,when user or endpoint 
 5.hallucination
+
+///////////////////
+production consideration for hybrisd search
+//////////
+BM25 rebuild-bm25 dont supp incr updates
+-rebuild when adding docus
+k value
+k=3,4
+////////////////////////////////////
+////////////////////////////////////
+//////////////////////////////////
+OBSERVATION
+/////////////////////////////////
+/////////////////////////////////
+when a bad answer comes we dont know how to debug.
+this is where observability comes.
+debugging llm is hard,becoz it produce different out for for same in.
+-coost surprises::10 iterations instead of 2 this=>makes the budget 5x
+#observability::understanding what your system is doing-the entire journey ,not just the final answer.
+EVALS
+-correctness
+-relevance
+-human feedback
+-regression detection
+METRICS
+-token cnt
+-latency per node
+-cost per run
+-error rates
+TRACES 
+-agent flow
+-input/outputs
+-tool calls
+-decision made
+//////////////////
+Langsmith
+/////////////////
+langsmith_setup.py
