@@ -157,3 +157,5 @@ montoring.py===>json formatter will return the log in good format of json
 ///////////////////////
 Production Ready API////
 4:16:00 hrs in video
+//////////////
+implementing proction project with the tutor in vs code locally
