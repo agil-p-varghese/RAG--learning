@@ -143,3 +143,14 @@ caching
 right size----initially start with small instanes
 ///////////////////////////////
 supabase-connection.py
+cost_optimization.py
+//////////////////////////////////
+3 pillars of Production visibility===>is it working?,is it fast?is it expensive?is it breaking?
+////////
+structuredLogging===what happened
+Metric collection====how much happened
+instrumental LLM ===wrps both
+//////////////
+montoring.py===>json formatter will return the log in good format of json
+          =>metric collector()
+          =>instrumented LLM()---detailed log(token,in,out,latency......)----total summary of metrics includng errors%
