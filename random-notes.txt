@@ -154,3 +154,6 @@ instrumental LLM ===wrps both
 montoring.py===>json formatter will return the log in good format of json
           =>metric collector()
           =>instrumented LLM()---detailed log(token,in,out,latency......)----total summary of metrics includng errors%
+///////////////////////
+Production Ready API////
+4:16:00 hrs in video
