@@ -1,0 +1,35 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+env/
+venv/
+
+# Environment variables & secrets
+.env
+.env.local
+
+# Vector databases & local storage (Chroma, FAISS, SQLite, etc.)
+chroma_db/
+*.db
+*.sqlite3
+
+# Logs & Cache
+logs/
+*.log
+.cache/
+.pytest_cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+# Lock files
+uv.lock
