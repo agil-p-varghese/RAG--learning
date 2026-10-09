@@ -1,0 +1,165 @@
+1.handling the "i dont know "  situation.
+2.displaying the source of context(information from KB) with every response of llm which makes the llm reliable
+3. have atleast 2 inference provider api keys-gpt,gemini
+4.install uv package,init,venv
+5.install packages langchain,langchain core...,py.
+6.env file-secrets
+7.raw files -> doc loader->langchain friendly datat form
+8.core loader-pdf,web,folder,unstructured ,txt
+9.PyMuPdF loader,unstructured pdf loader(tables...)
+9.web loading-->
+10.chunking makes or break the RAG-->chunking is imp.
+11.spilt with meaning boundary-->
+12.CHUNKING IS THE ARCHIETECUTURE-chunking is the main thing which controlls rag quality
+CHUUNKING STATERGIES
+/////////////////
+-fixed chunking--not for production
+-recursive chunking
+try to split at natural boundaries(eg split at para(\n\n) ,or new line split(\n),sentences(.),clauses(,)------decision tree for chumking
+-semantic chunking:
+embed each sentense ,compare adja sentences for similarty  used for quality text splitiing eg-legal documents,technical manuals...here accurancy means lot
+////////////////
+traditional vs late chunking
+-traditional chunking lost context at boundaries
+-late chunking==full doc->embeded first ->embedding chunking
+-taditional chunking chunk 5 has no idea what chunk 1--4 contain
+-Late:chunk 5 embedding includes full doc context(accurancy incr by~10%) 
+//////////////
+EMBEDDING
+//////////////
+chat model=>text in->text out(eg::gpt)
+embedding model==>text in ,embedding/vector out
+//////////////
+chroma db---
+metadata- filtering
+///////////
+RAG pipeline---1::30 min
+QQ}
+///////why RAG FAILS???
+1-Bad chunking
+causes loss of context betw the chunks 
+resolveing by recursive text splitter
+having overlap helps to maintain the context --cheap method
+2-embedding mismatch
+3-Retreival noise
+retreiver may return relevant and irrelevant doc
+//vector search fails in::
+-in cases of product codes eg::SKU456JI(no meaning for codes)
+-Actonyms -FSSAI guidelines
+-ERR codes--its a literal string that require semantic matching
+-exactr names like john s address
+///solution BM25 search
+-good at keyword match
+/////conclution
+we do a hybrid matching
+we do a RRF--reciprocal rank fusion(ranks the chunks from both semantic and keyword chunks
+!!!!!!!!!!in PRODUCTION add HYBRID SEARCH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+implementation in prod_hybrid_search.py
+4.contexrt overflow
+token budgeting(imp for inferencing)
+one bad request could blow our tokens
+we track 3 things 
+-input token
+-output token
+-requests
+implementation n cost_optimisation.py
+we can check in the langsmith of our token flow
+if a user is blowing the token,talk with him and charge him more
+model routing,token budgeting,when user or endpoint 
+5.hallucination
+
+///////////////////
+production consideration for hybrisd search
+//////////
+BM25 rebuild-bm25 dont supp incr updates
+-rebuild when adding docus
+k value
+k=3,4
+////////////////////////////////////
+////////////////////////////////////
+//////////////////////////////////
+OBSERVATION
+/////////////////////////////////
+/////////////////////////////////
+when a bad answer comes we dont know how to debug.
+this is where observability comes.
+debugging llm is hard,becoz it produce different out for for same in.
+-coost surprises::10 iterations instead of 2 this=>makes the budget 5x
+#observability::understanding what your system is doing-the entire journey ,not just the final answer.
+EVALS
+-correctness
+-relevance
+-human feedback
+-regression detection
+METRICS
+-token cnt
+-latency per node
+-cost per run
+-error rates
+TRACES 
+-agent flow
+-input/outputs
+-tool calls
+-decision made
+//////////////////
+Langsmith
+/////////////////
+langsmith_setup.py
+advanvanced_rag.py(133 line)=>demo_contextual compression=>advaced rag line1
+////////////
+index tunning==scaling factor
+HNSW parameters
+1.M(max connections)
+the maximum connection between nodes in graph
+low M==small index ,faster build
+high M ==larger index,higher accurancy
+
+2.ef(Search Efforts)
+low ef---fast search ,low accurancy
+high ef---vice versa
+The Production Trade Off
+is between
+1)Accurancy
+2)speed
+3)Memory
+//////////////
+for prototype====m=16,ef=40
+for prodcution---m=16,ef =100
+for high accurancy cases-----m=32,ef=200
+scaling situation
+/////////////////
+if query taking too long ==>vertical scale(add ram,hww stack
+if getting out of memoy error or accurancy lost===>spilit instance(horizontal scaling)
+///////////////////////////////////////
+A SINGLE WELL TUNNED INSTANCE HANDLES MILLIONS OF VECTORS!!!!!!!!!!!========DONT OVER ENGINEER#####################
+AT LARGE SCALE PGVECTOR SELF HOSTED WILL SAVE US THOUSANDS OF DOLLARS
+////////////////////////////////
+COST OPTIMIZATION TECHNIQUES
+////////////////////////
+Reduce the dimension of the vectors
+use quantization  
+batch queries(
+caching
+right size----initially start with small instanes
+///////////////////////////////
+supabase-connection.py
+cost_optimization.py
+//////////////////////////////////
+3 pillars of Production visibility===>is it working?,is it fast?is it expensive?is it breaking?
+////////
+structuredLogging===what happened
+Metric collection====how much happened
+instrumental LLM ===wrps both
+//////////////
+montoring.py===>json formatter will return the log in good format of json
+          =>metric collector()
+          =>instrumented LLM()---detailed log(token,in,out,latency......)----total summary of metrics includng errors%
+///////////////////////
+Production Ready API////
+4:16:00 hrs in video
+//////////////
+implementing proction project with the tutor in vs code locally
+///////////
+intersting things from RAG Learning from udacity.
+-usage of jinja for policy ====premium customer/standard customer
+-A|B testing for seeing the test results by running prompsts parralel--using fn to change git hub branch
