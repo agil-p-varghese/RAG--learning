@@ -163,3 +163,7 @@ implementing proction project with the tutor in vs code locally
 intersting things from RAG Learning from udacity.
 -usage of jinja for policy ====premium customer/standard customer
 -A|B testing for seeing the test results by running prompsts parralel--using fn to change git hub branch
+//////////////
+To bring your local folder in line with your GitHub repository (when GitHub is ahead), you need to pull the latest changes into your local workspace.
+git fetch origin
+git pull origin main
