@@ -299,7 +299,7 @@ class SecurePipeline:
         is_suspicious,reason=self.sanitizer.is_suspicious(user_input)
         if is_suspicious:
             result["blocked"]=True
-            result["security_notess"].append(f"Input Blocked : {reason}")
+            result["security_notes"].append(f"Input Blocked : {reason}")
             return result
 
         sanitized=self.sanitizer.sanitize(user_input)

@@ -1,0 +1,28 @@
+This file briefs the high level working of code files.
+///////////////
+app/security.py
+//////////////
+High-Level Workflow of SecurePipeline
+Initialization (__init__):
+
+Sets up all your security modular components: an InputSanitizer, a PIIDetector, a SecurityGaurd, an OutputValidator, and your Hugging Face LLM (ChatHuggingFace).
+
+Step 1: Input Sanitization (self.sanitizer):
+
+Inspects the raw user input for obvious malicious injection patterns or suspicious code. If it flags something immediately, the pipeline blocks the request right away and records a security note.
+
+Step 2: PII Detection & Masking (self.pii_detector):
+
+Scans the sanitized input for Personally Identifiable Information (like email addresses, phone numbers, or credit card details). If found, it automatically masks them so sensitive data is never sent to the LLM.
+
+Step 3: LLM Guardrail Check (self.guard):
+
+Passes the sanitized, PII-free text to your security guard model/chain. The guard evaluates the intent for jailbreaks or prompt overrides. If it returns "safe": false, the request is blocked.
+
+Step 4: Core Generation (self.llm):
+
+If all security checks pass, the cleaned and safe input is sent to your Hugging Face model (self.llm.invoke(sanitized)), and it generates a response.
+
+Step 5: Output Validation (self.validator):
+
+Before returning the final answer to the user, the LLM's output text is validated and cleaned to ensure it doesn't leak system secrets or toxic information.
