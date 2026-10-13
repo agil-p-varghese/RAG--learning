@@ -96,4 +96,88 @@ class SematicCache:
         self.threshold=similarity_threshold
         self.embedder=ChatOpenAI(model="gpt-40-mini",temperature=0)
 
+    def _hash_query(self,query:str)->str:
+        """Create hash Of normalized Query"""
+        normalized=query.lower().strip()
+        return hashlib.md5(normalized.encode()).hexdigest()
+
+    def get(self,query:str)->Optional[str]:
+        """get cached response if similar query exists"""
+        query_hash=self._hash_query(query)
+
+        #Exact Match
+        if query_hash in self.cache:
+            return self.cache[query_hash]["response"]
         
+        #could add embedding based similarity here
+        #for demo ,just use Exact match
+
+        return None
+    
+    def set(self,query:str,response:str):
+        """cache a response"""
+        query_hash=self._hash_query(query)
+        self.cache[query_hash]={"query":query,"response":response}
+
+    def stats(self)->dict:
+        return {"cached_queries":len(self.cache)}
+
+class CachedLLM:
+    """llm wrapper with caching"""
+
+    def __init__(self):
+        self.llm=ChatOpenAI(model="gpt-4o-mini",temperature=0)
+        self.cache=SematicCache()
+        self.cache_hits=0
+        self.cache_misses=0
+
+    @traceable(name="cached_invoke")
+    def invoke(self,query:str)->tuple[str,bool]:
+        """invoke with caching.
+        Returns :(response,from_cache)"""
+
+        #check cache
+        cached=self.cache.get(query)
+        if cached:
+            self.cache_hits+=1
+            return cached,True
+        
+        #Call LLM
+        self.cache_misses+=1
+        response=self.llm.invoke(query)
+        result=response.content
+
+        #Cache result
+        self.cache.set(query,result)
+
+        return result,False
+    
+    def get_stats(self)->dict:
+        total=self.cache_hits+self.cache_misses
+        hit_rate=self.cache_hits/total if total>0 else 0
+        return {
+            "hits":self.cache_hits,
+            "misses":self.cache_misses,
+            "hit_rate": f"{hit_rate:.1%}",
+        }
+
+def demo_caching():
+    """Demonstrate Caching"""
+    llm=CachedLLM()
+    queries = [
+        "What is Python?",
+        "What is JavaScript?",
+        "What is Python?",  # Cache hit
+        "What is python?",  # Cache hit (normalized)
+        "What is Rust?",
+    ]
+    print("\nCaching Demo:\n")
+
+    for query in queries:
+        reult,from_cache=llm.invoke(query)
+        source ="CACHE" if from_cache else "LLM"
+        print(f"[{source}] {query} ->> {result[:30]}.......")
+    
+    print(f"\n Stats: {llm.get_stats()}")
+
+#=========Token Budgetting==============
