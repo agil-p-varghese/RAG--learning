@@ -10,18 +10,28 @@ from langchain_openai import ChatOpenAI
 from langchain_cores.prompts import ChatPromptTemplate
 from langsmith import traceable
 from dotenv import load_dotenv
+from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 
 load_dotenv()
 
+#======================Helper to initialize the Hugging face chat models==================
+def get_hf_chat_model(repo_id:str,temperature:float=0)->ChatHuggingFace:
+    """Initialize a Hugging Face endpoint and wraps it in a ChatHuggingFace MODEL"""
+    llm=HuggingFaceEndpoint(
+        repo_id=repo_id,
+        task="text_generation",
+        temperature=temperature,
+    )
+    return ChatHuggingFace(llm=llm)
 #===========Model Routing ===============
 
 class ModelRouter:
     """routes queries to appropriate model based on complexity"""
     
     def __init__(self):
-        self.cheap_model=ChatOpenAI(model="gpt-4o-mini",temperature=0)
-        self.expensive_model=ChatOpenAI(model="gpt-4o",temperature=0)
-        self.classifier=ChatOpenAI(model="gpt-4o-mini",temperature=0)
+        self.cheap_model=get_hf_chat_model("Qwen/Qwen2.5-7B-Instruct",temperature=0)
+        self.expensive_model=get_hf_chat_model("meta-llama/Meta-Llama-3-70B-Instruct",temperature=0)
+        self.classifier=get_hf_chat_model("Qwen/Qwen2.5-7B-Instruct",temperature=0)
 
     def classify_complexity(self,query:str)->str:
         """Classify query based on complexity"""
@@ -51,11 +61,11 @@ class ModelRouter:
 
         if complexity=="simple":
             model=self.cheap_model
-            model_name="gpt-4o-mini"
+            model_name="Qwen/Qwen2.5-7B-Instruct"
             cost_per_1k=0.0015
         else:
             model=self.expensive_model
-            model_name="gpt-4o"
+            model_name="meta-llama/Meta-Llama-3-70B-Instruct"
             cost_per_1k=0.0025
 
         response=model.invoke(query)
@@ -94,7 +104,7 @@ class SematicCache:
     def __init__(self,similarity_threshold:float=0.9):
         self.cache={}
         self.threshold=similarity_threshold
-        self.embedder=ChatOpenAI(model="gpt-40-mini",temperature=0)
+        self.embedder=get_hf_chat_model("Qwen/Qwen2.5-7B-Instruct", temperature=0)
 
     def _hash_query(self,query:str)->str:
         """Create hash Of normalized Query"""
@@ -126,7 +136,7 @@ class CachedLLM:
     """llm wrapper with caching"""
 
     def __init__(self):
-        self.llm=ChatOpenAI(model="gpt-4o-mini",temperature=0)
+        self.llm=get_hf_chat_model("Qwen/Qwen2.5-7B-Instruct", temperature=0)
         self.cache=SematicCache()
         self.cache_hits=0
         self.cache_misses=0
@@ -216,7 +226,7 @@ class TokenBudget:
 class BudgetedLLM:
     """LLM with token budgeting"""
     def __init__(self,max_tokens:int=4000):
-        self.llm=ChatOpenAI(model="gpt-4o-mini",temperature=0)
+        self.llm=get_hf_chat_model("Qwen/Qwen2.5-7B-Instruct", temperature=0)
         self.budget=TokenBudget(max_tokens_per_request=max_tokens)
 
     @traceable(name="budgeted_invoke")
@@ -258,9 +268,9 @@ def demo_token_budgeting():
     print(f"\n Usage : {llm.get_stats()}")
 
 if __name__=="__main__":
-    # demo_model_routing()
+    demo_model_routing()
     # demo_caching()
-    demo_token_budgeting()
+    #demo_token_budgeting()
 
 # Production version would:
 # 1. Embed the query into a vector
