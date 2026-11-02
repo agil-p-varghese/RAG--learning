@@ -294,6 +294,6 @@ def demo_token_budgeting():
 
 
 if __name__ == "__main__":
-    demo_model_routing()
-    # demo_caching()
-    #demo_token_budgeting()
+    #demo_model_routing()
+    #demo_caching()
+    demo_token_budgeting()
