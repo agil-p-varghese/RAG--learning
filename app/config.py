@@ -8,8 +8,8 @@ from functools import lru_cache
 class Settings(BaseSettings):
     #LLM Configuration
     openai_api_key:str
-    primary_model: str="gpt-4o-mini"
-    fallback_model: str="gpt-4o-mini"
+    primary_model: str="Qwen/Qwen2.5-Coder-7B-Instruct"
+    fallback_model: str="Qwen/Qwen2.5-Coder-7B-Instruct"
 
     #LangSmith
     langchain_tracing_v2: bool=True
