@@ -6,7 +6,7 @@ import json
 import re
 from typing import Optional
 from pydantic import BaseModel,Field
-from langchain_openai import ChatOpenAI
+#from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langsmith import traceable
@@ -275,7 +275,7 @@ def demo_output_validation():
             print(f"Cleaned : {cleaned[:50]}")
 
 #====secure pipeline======
-class SecurePipeline:
+class SecurityPipeline:
     """Complete secure processing pipeline."""
     def __init__(self):
         self.sanitizer=InputSanitizer()
