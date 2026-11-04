@@ -1,0 +1,66 @@
+uv run python -c "
+from app.agent import ProductionAgent
+agent=ProductionAgent()
+print("===ProductionAgent stand Alone Test")
+print()
+queries=[
+    "what is Langgraph in one sentence?",
+    "what is 2+2?",
+    "Explain diff btw RAG and finetunning?",
+]
+
+for query in queries:
+
+uv run python -c "
+from app.agent import ProductionAgent; 
+agent = ProductionAgent(); 
+print('=== ProductionAgent Standalone Test ===\n'); 
+queries = [
+    'What is LangGraph in one sentence?', 
+    'What is 2+2?', 
+    'Explain difference between RAG and fine-tuning?'
+    ]; 
+    [print(f'Query: {q}\nResponse: {(res := agent.invoke(q))[\"response\"]}\nModel: {res[\"model_used\"]}\nError: {res[\"error\"]}\n' + '-'*50) for q in queries]"
+    //////////
+////////////////////cache test cmds///////////////
+
+uv run python -c "
+import time
+from app.cache import ResponseCache
+cache=ResponseCache(ttl_seconds=3)
+
+print("====Cache Demo=====")
+print()
+
+#miss
+result=cache.get('What is python?')
+print(f"first lookup : {result} (miss-mothing cached yet)")
+
+#Store
+
+cache.set('What is python?','python is a pgming lang')
+print('stored response in cache')
+
+#hit
+result=cache.get('what is python?')
+print('3.second lookup: {result} (HIT !)')
+
+#Lowercase lookup
+result=cache.get('what is python?')
+print(f"4.Lowercase lookup : {result} (hit-case insensitive)")
+
+#different query
+result=cache.get('what is javascript?')
+print('5.diff query')
+
+#stats
+print(f'6.stats :{stats}')
+
+#wait for ttl expiration
+print('7.waiting for ttl expiration')
+time.sleep(4)
+
+result=cache.get('What is python?')
+print(f'8.{result}')
+print(f'9.final stats : {stats}')
+"
